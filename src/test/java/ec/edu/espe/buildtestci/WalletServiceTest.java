@@ -123,10 +123,10 @@ public class WalletServiceTest {
     @Test
     void withdraw_insufucuentFunds_shuoldThrow_andNotSave(){
         // Arrange
-        Wallet wallet = new Wallet("cdpincha1@espe.edu.ec",300.0);
-        String walletId = "2"; // usar id numérico como string
+        Wallet wallet = new Wallet("Luis@espe.edu.ec",300);
+        String walletId = wallet.getId();
 
-        when(walletRepository.findById(anyLong())).thenReturn(Optional.of(wallet));
+        when(walletRepository.findById(walletId)).thenReturn(Optional.of(wallet));
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
                 walletService.withdraw(walletId,500));
@@ -135,4 +135,5 @@ public class WalletServiceTest {
         verify(walletRepository,never()).save(any());
 
     }
+
 }
