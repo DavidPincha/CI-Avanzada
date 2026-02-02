@@ -15,8 +15,9 @@ public class WalletService {
         this.riskClient = riskClient;
     }
 
+    //Crear una cuenta si cumple con las reglas del negocio
     public WalletResponse createWallet(String ownerEmail, double initialBalance) {
-        if (ownerEmail == null || !ownerEmail.contains("@")) {
+        if (ownerEmail == null || ownerEmail.isEmpty() || !ownerEmail.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
             throw new IllegalArgumentException("Invalid email address");
         }
 
@@ -24,25 +25,30 @@ public class WalletService {
             throw new IllegalArgumentException("Initial balance cannot be negative");
         }
 
+        //Regla de negocio: Usuario Bloqueado
         if (riskClient.isBlocked(ownerEmail)) {
             throw new IllegalStateException("User blocked");
         }
 
-        if (walletRepository.existsByOwnerEmail(ownerEmail)) {
+        //Regla de negocio: No duplicar cuenta por email
+        if(walletRepository.existsByOwnerEmail(ownerEmail)){
             throw new IllegalStateException("Wallet already exists");
         }
 
-        Wallet wallet = new Wallet(null, ownerEmail, initialBalance);
+        Wallet wallet = new Wallet(ownerEmail, initialBalance);
         Wallet saved = walletRepository.save(wallet);
 
         return new WalletResponse(saved.getId(), saved.getBalance());
     }
 
+    //Depositar dinero en la wallet
     public double deposit(String walletId, double amount){
-        if(amount < 0){
+        if (amount < 0){
             throw new IllegalArgumentException("Amount cannot be negative");
         }
+
         Optional<Wallet> found = walletRepository.findById(walletId);
+
         if(found.isEmpty()){
             throw new IllegalStateException("Wallet not found");
         }
@@ -50,6 +56,24 @@ public class WalletService {
         Wallet wallet = found.get();
         wallet.deposit(amount);
 
+        //Persistimos el nuevo saldo
+        walletRepository.save(wallet);
+        return wallet.getBalance();
+    }
+
+    //Retirar dinero de la wallet
+    public double withdraw (String walletId, double amount){
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount cannot be negative");
+        }
+
+        Wallet wallet = walletRepository.findById(walletId).orElseThrow(()->
+                new IllegalArgumentException("Wallet not found"));
+
+        if(wallet.getBalance() < amount){
+            throw new IllegalStateException("Insufficient funds");
+        }
+        wallet.withdraw(amount);
         walletRepository.save(wallet);
         return wallet.getBalance();
     }

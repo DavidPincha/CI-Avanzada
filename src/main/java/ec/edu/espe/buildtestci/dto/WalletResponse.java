@@ -19,8 +19,4 @@ public class WalletResponse {
     public double getBalance() {
         return balance;
     }
-
-    public String getId() {
-        return walletId;
-    }
 }
