@@ -19,12 +19,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          # Esto guarda tus librerías para que el próximo build sea veloz
           cache: 'gradle'
 
       - name: Dar permisos a gradlew
         run: chmod +x gradlew
 
       - name: Construir y Probar
-        # Usamos 'build' directamente porque incluye la ejecución de tests
         run: ./gradlew build
