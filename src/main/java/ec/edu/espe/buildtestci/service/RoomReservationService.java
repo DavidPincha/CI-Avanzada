@@ -20,6 +20,8 @@ public class RoomReservationService {
             throw new IllegalArgumentException("codigo no debe ser nulo");
         }
 
+
+
         // Email con formato valido
         if (email == null || !email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
             throw new IllegalArgumentException("Email invalido");

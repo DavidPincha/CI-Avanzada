@@ -109,6 +109,7 @@ class RoomReservationServiceTest {
 
     @Test
     void createReservation_RoomAlreadyReserved() {
+
         // Arrange
         String roomCode = "Hab-1";
         String email = "espe@espe.edu";
