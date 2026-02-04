@@ -17,24 +17,22 @@ public class RoomReservationService {
     public ReservationResponse createReservation(String roomCode, String email, int hours) {
         // roomCode no debe ser nulo
         if (roomCode == null || roomCode.isEmpty()) {
-            throw new IllegalArgumentException("codigo no debe ser nulo");
+            throw new IllegalArgumentException("El campo debe tener un valor");
         }
-
-
 
         // Email con formato valido
         if (email == null || !email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-            throw new IllegalArgumentException("Email invalido");
+            throw new IllegalArgumentException("El correo no sirve");
         }
 
-        // regla de las horas entre 0 yu 8 h
+        // regla de las horas entre 0 y 8 h
         if (hours <= 0 || hours > 8) {
-            throw new IllegalArgumentException("Horas mayores a 0 y menores o iguales  a8");
+            throw new IllegalArgumentException("Las horas deben ser entre 0 y 8h");
         }
 
         // reservas no validas si estan ocupados
         if (reservationRepository.existsByRoomCode(roomCode)) {
-            throw new IllegalStateException("Cuarto reservado");
+            throw new IllegalStateException("La habitacion esta reservada");
         }
 
         //usuarios bloqueados no pueden crear reservas

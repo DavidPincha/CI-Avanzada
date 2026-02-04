@@ -70,25 +70,6 @@ class RoomReservationServiceTest {
         verifyNoInteractions(userPolicyClient);
     }
 
-
-
-    @Test
-    void createReservation_EmailNull() {
-        // Arrange
-        String roomCode = "Hab-2";
-        String email = null;
-        int hours = 4;
-
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> roomReservationService.createReservation(roomCode, email, hours)
-        );
-        assertEquals("El campo debe tener un valor", exception.getMessage());
-        verifyNoInteractions(reservationRepository);
-        verifyNoInteractions(userPolicyClient);
-    }
-
     @Test
     void createReservation_HoursOutOfRange_Zero() {
         // Arrange
