@@ -135,4 +135,5 @@ public class WalletServiceTest {
         verify(walletRepository,never()).save(any());
 
     }
+
 }
