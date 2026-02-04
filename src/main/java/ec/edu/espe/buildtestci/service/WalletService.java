@@ -25,12 +25,12 @@ public class WalletService {
             throw new IllegalArgumentException("Initial balance cannot be negative");
         }
 
-        //Regla de negocio: Usuario Bloqueado
+        //Usuario Bloqueado
         if (riskClient.isBlocked(ownerEmail)) {
             throw new IllegalStateException("User blocked");
         }
 
-        //Regla de negocio: No duplicar cuenta por email
+        //No duplicar cuenta por email
         if(walletRepository.existsByOwnerEmail(ownerEmail)){
             throw new IllegalStateException("Wallet already exists");
         }
